@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Realtime Mini Dashboard</title>
+    <style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0fdf4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 30px;
+    color: #3f6212;
+}
+
+#box {
+    margin: 30px auto;
+    width: 90%;
+    max-width: 500px;
+}
+
+.item {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 6px solid #14b8a6;
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15);
+}
+
+
+.item:hover {
+    transform: scale(1.02);
+}
+
+.time {
+    font-size: 12px;
+    color: #4d7c0f;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+<body>
+
+<h1>⚡ Realtime Data</h1>
+<div id="box"></div>
+
+<script>
+const box = document.getElementById("box");
+const ws = new WebSocket("ws://localhost:8285");
+
+ws.onopen = () => console.log("WS connect");
+ws.onerror = (e) => console.log("WS error", e);
+
+ws.onmessage = e => {
+    const d = document.createElement("div");
+    d.className = "item";
+    d.textContent = e.data;
+    box.prepend(d);
+
+    if (box.children.length > 8) box.lastChild.remove();
+};
+</script>
+
+</body>
+</html>
